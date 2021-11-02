@@ -9,11 +9,16 @@ const colorPalette = [
     "#00f5d4"
 ];
 
-const TextComp =(props) =>{
+interface ITextCompProps{
+    mouseOver?: boolean
+}
+
+const TextComp =(props:ITextCompProps, ref:React.Ref<HTMLParagraphElement>) =>{
+
    const { mouseOver } = props;
     const [textColor , setTextColor] = useState( colorPalette[0]);
 
-    const onClickText =() =>{
+    const onClickText:React.MouseEventHandler<HTMLParagraphElement> =(e):void =>{
 
         let random = Math.floor(Math.random() * (4 - 0 + 1)) + 0;
         setTextColor(colorPalette[random]);
@@ -21,10 +26,11 @@ const TextComp =(props) =>{
 
     return(
         <React.Fragment>
-            
-            <p style={{color:textColor}} onClick={onClickText}>{ mouseOver ? "Mouse Enter" : "Mouse Leave"}</p>
+            <p ref={ref} style={{color:textColor}} onClick={onClickText}>{ mouseOver ? "Mouse Enter" : "Mouse Leave"}</p>
         </React.Fragment>
     )
 }
 
-export default withMouseOver(TextComp);
+const forwardRef = React.forwardRef(TextComp);
+
+export default withMouseOver(forwardRef);
