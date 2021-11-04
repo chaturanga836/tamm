@@ -1,15 +1,16 @@
-const express = require('express');
-const session = require('express-session');
-const bodyParser = require('body-parser');
+import express, { Request, Response, NextFunction } from 'express';
+import { json, urlencoded } from 'body-parser';
+
+
 const app = express();
 const port = 3001
 const fs = require('fs');
 
-app.use(session({secret: 'ssshhhhh'}));
-app.use(bodyParser.urlencoded());
 
-app.use(bodyParser.json());
-app.use(['/pub/proxy/*', "/api/proxy/*"], (req, res, next)=> {
+app.use(urlencoded());
+
+app.use(json());
+app.use(['/pub/proxy/*', "/api/proxy/*"], (req: Request, res: Response, next: NextFunction)=> {
 
   if(req.session){
     next();
@@ -19,7 +20,7 @@ app.use(['/pub/proxy/*', "/api/proxy/*"], (req, res, next)=> {
 
 });
 
-app.post('/pub/proxy/save/:id', (req, res)=>{
+app.post('/pub/proxy/save/:id', (req: Request, res: Response)=>{
   const path = "data/"+req.params.id +".json";
   fs.writeFileSync(path, JSON.stringify(req.body) );
   const contents =fs.readFileSync(path, {encoding:'utf8', flag:'r'});
